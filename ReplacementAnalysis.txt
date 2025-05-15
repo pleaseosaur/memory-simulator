@@ -1,0 +1,101 @@
+Replacement Analysis
+CSCI 447
+Spring 2024
+
+Andrew Cox
+03 June 2024
+
+
+Because of the randomly generated nature of the data, the results of the
+replacement analysis will contain some variance. However, the general trends
+should be consistent. The program was stress tested with increasing inputs to
+Simulate() up to 500,000,000 to ensure it could handle large sets. However, for
+the sake of balancing output speed with relatively accurate results, the analysis
+was run with 1000 * MAX_FRAMES (2,048,000) rounds.
+
+Each replacement algorithm was tested five (5) consecutive times to ensure the
+results were consistent. The results are as follows:
+
++------------------+----------+----------+-------------+----------------------+
+| Algorithm        | Run      | Read     | Write       | Total                |
+|                  |          | Faults   | Faults      | Faults               |
++------------------+----------+----------+-------------+----------------------+
+| Random           | 1        | 305246   | 76155       | 381401               |
+|                  |          |          |             | (19.97% write)       |
+|                  +----------+----------+-------------+----------------------+
+|                  | 2        | 307091   | 76099       | 383190               |
+|                  |          |          |             | (19.86% write)       |
+|                  +----------+----------+-------------+----------------------+
+|                  | 3        | 306209   | 75986       | 382195               |
+|                  |          |          |             | (19.88% write)       |
+|                  +----------+----------+-------------+----------------------+
+|                  | 4        | 307023   | 76376       | 383399               |
+|                  |          |          |             | (19.92% write)       |
+|                  +----------+----------+-------------+----------------------+
+|                  | 5        | 306572   | 76009       | 382581               |
+|                  |          |          |             | (19.87% write)       |
++------------------+----------+----------+-------------+----------------------+
+| LFU              | 1        | 475236   | 118736      | 593972               |
+|                  |          |          |             | (19.99% write)       |
+|                  +----------+----------+-------------+----------------------+
+|                  | 2        | 476841   | 119104      | 595945               |
+|                  |          |          |             | (19.99% write)       |
+|                  +----------+----------+-------------+----------------------+
+|                  | 3        | 479111   | 118970      | 598081               |
+|                  |          |          |             | (19.89% write)       |
+|                  +----------+----------+-------------+----------------------+
+|                  | 4        | 475820   | 118644      | 594464               |
+|                  |          |          |             | (19.96% write)       |
+|                  +----------+----------+-------------+----------------------+
+|                  | 5        | 477500   | 119179      | 596679               |
+|                  |          |          |             | (19.97% write)       |
++------------------+----------+----------+-------------+----------------------+
+| LRU              | 1        | 808121   | 38741       | 846862               |
+|                  |          |          |             | (4.57% write)        |
+|                  +----------+----------+-------------+----------------------+
+|                  | 2        | 821912   | 38352       | 860264               |
+|                  |          |          |             | (4.46% write)        |
+|                  +----------+----------+-------------+----------------------+
+|                  | 3        | 810961   | 37756       | 848717               |
+|                  |          |          |             | (4.45% write)        |
+|                  +----------+----------+-------------+----------------------+
+|                  | 4        | 815891   | 38556       | 854447               |
+|                  |          |          |             | (4.51% write)        |
+|                  +----------+----------+-------------+----------------------+
+|                  | 5        | 800028   | 38065       | 838093               |
+|                  |          |          |             | (4.54% write)        |
++------------------+----------+----------+-------------+----------------------+
+********************************************************************************
+ Tests were conducted locally on MacOS using the Mac-compiled MemSim.o file, but
+ the results were consistent with the originally provided MemSim.o file compiled
+ and run on the lab machines.
+********************************************************************************
+
+
+The Random algorithm had an average of 382,553 total faults with an average of
+19.90% write faults.
+
+The LFU algorithm had an average of 597,228 total faults with an average of
+19.94% write faults.
+
+The LRU algorithm had an average of 849076 total faults with an average of 4.51%
+write faults.
+
+In terms of total faults alone, the Random algorithm performed the best, followed
+by LFU, and then LRU. However, the Random algorithm had the highest overall
+percentage of write faults. The LRU algorithm had the lowest percentage of write
+faults, but the highest total faults. The LFU algorithm had the highest percentage
+of write faults, but the second lowest total faults.
+
+If the goal was simply to minimize the overall number of faults, the Random
+algorithm would clearly be the best choice. However, given the overhead for
+incurring a read fault is considerably less expensive than a write fault, the LRU
+algorithm would be the better overall choice.
+
+It should be noted that the decay implemented for LFU aligned with the instructions
+provided, halving the frequency counters every 1000 accesses. Perhaps with a
+different decay rate implemented, such as exponential decay, the LFU algorithm
+could have performed better. Although, given the current results, it is unlikely
+that LFU would outperform LRU even in this scenario.
+
+Ultimately, the LRU algorithm is the best choice for this particular simulation.
